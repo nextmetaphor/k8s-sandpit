@@ -1,0 +1,6 @@
+[submodule "simple-golang-api"]
+	path = simple-golang-api
+	url = https://github.com/nextmetaphor/simple-golang-api.git
+[submodule "java-microservice-api"]
+	path = java-microservice-api
+	url = https://github.com/nextmetaphor/java-microservice-api.git
