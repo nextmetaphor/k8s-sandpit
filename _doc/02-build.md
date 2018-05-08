@@ -1,5 +1,5 @@
-# Demo
-This demo walks through the build of simplistic golang and Java APIs, and demonstrates how each can be packaged as a container and deployed to Kubernetes.
+# Build
+This document walks through the build of simplistic golang and Java APIs, and demonstrates how each can be packaged as a container.
 
 ## What Do Containers Look Like?
 A decent reference is the diagram at <https://www.docker.com/what-container>.
@@ -102,12 +102,4 @@ curl -s http://`minikube ip`:8080/person/200 | json_pp
 
 # kill the container
 docker stop java-microservice-api
-```
-
-## Deploy into Kubernetes
-```bash
-# open the dashboard
-minikube dashboard
-
-kubectl create -f _k8s/demo-namespace.yaml
 ```

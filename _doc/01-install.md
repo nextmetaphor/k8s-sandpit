@@ -31,7 +31,10 @@ Refer to <https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#xhy
 ### Start `minikube`
 Execute the following command:
 ```bash
-minikube start --vm-driver=hyperkit
+minikube start --vm-driver=hyperkit --cpus 4 --memory 8192
+ 
+# causes it to hang
+# --extra-config=controller-manager.HorizontalPodAutoscalerUseRESTClients=false
 ```
 
 ### Enable the `metrics-server` and `heapster` Addons
