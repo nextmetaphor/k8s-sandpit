@@ -3,10 +3,10 @@ Instructions on installing and configuring `minikube`.
 
 ## Installing `minikube`
 ### Download `minikube`
-At the time of writing, the current version is `0.28.1` and the install command is as follows:
+At the time of writing, the current version is `0.28.2` and the install command is as follows:
 
 ```bash
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.1/minikube-darwin-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.2/minikube-darwin-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 ```
 Refer to <https://github.com/kubernetes/minikube/releases> for detailed instructions for installing `minikube`.
 
