@@ -1,41 +1,28 @@
 # Install
-Instructions on installing and configuring `minikube`.
+Instructions on installing and configuring `minikube` on macOS.
 
 ## Installing `minikube`
 ### Download `minikube`
-At the time of writing, the current version is `0.28.2` and the install command is as follows:
-
+At the time of writing, the recommended approach is to use `homebrew` should be used; the install command is as follows:
 ```bash
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.2/minikube-darwin-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+$ brew install minikube
 ```
-Refer to <https://github.com/kubernetes/minikube/releases> for detailed instructions for installing `minikube`.
+Refer to <<https://minikube.sigs.k8s.io/docs/start/>> for detailed instructions for installing `minikube`.
 
 ### Install `kubectl`
 To install `kubectl` using Homebrew, the command is as follows:
 
 ```bash
-$ brew install kubectl
+$ brew install kubernetes-cli
 ```
-Refer to <https://kubernetes.io/docs/tasks/tools/install-kubectl/> for further details on installing `kubectl`. 
-
-### Install Appropriate Driver Plugin
-To install the `hyperkit` driver, the command is as follows:
-
-```bash
-$ curl -LO https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-hyperkit \
-&& chmod +x docker-machine-driver-hyperkit \
-&& sudo mv docker-machine-driver-hyperkit /usr/local/bin/ \
-&& sudo chown root:wheel /usr/local/bin/docker-machine-driver-hyperkit \
-&& sudo chmod u+s /usr/local/bin/docker-machine-driver-hyperkit
-```
-Refer to <https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#xhyve-driver> for further details on installing driver plugins.
+Refer to <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos> for further details on installing `kubectl`. 
 
 ## Starting and Configuring `minikube`
 ### Start `minikube`
-Execute the following command to start `minikube` using the correct driver, and allocating a decent amount of resource to run it. 
+Execute the following command to start `minikube`, allocating a decent amount of resource to run it. 
 
 ```bash
-$ minikube start --vm-driver=hyperkit --cpus 4 --memory 8192
+$ minikube start --cpus 4 --memory 8192
  ```
 
 ### Enable the `metrics-server` and `heapster` Addons
@@ -44,47 +31,60 @@ In order for horizontal pod autoscaling to work, we need to ensure that the `hea
 To check the current status of the `minikube` addons, execute the following command.
 ```bash
 $ minikube addons list
-- addon-manager: enabled
-- coredns: disabled
-- dashboard: enabled
-- default-storageclass: enabled
-- efk: disabled
-- freshpod: disabled
-- heapster: enabled
-- ingress: disabled
-- kube-dns: enabled
-- metrics-server: disabled
-- registry: disabled
-- registry-creds: disabled
-- storage-provisioner: enabled
+|-----------------------------|----------|--------------|
+|         ADDON NAME          | PROFILE  |    STATUS    |
+|-----------------------------|----------|--------------|
+| ambassador                  | minikube | disabled     |
+| auto-pause                  | minikube | disabled     |
+| csi-hostpath-driver         | minikube | disabled     |
+| dashboard                   | minikube | disabled     |
+| default-storageclass        | minikube | enabled ✅   |
+| efk                         | minikube | disabled     |
+| freshpod                    | minikube | disabled     |
+| gcp-auth                    | minikube | disabled     |
+| gvisor                      | minikube | disabled     |
+| helm-tiller                 | minikube | disabled     |
+| ingress                     | minikube | disabled     |
+| ingress-dns                 | minikube | disabled     |
+| istio                       | minikube | disabled     |
+| istio-provisioner           | minikube | disabled     |
+| kubevirt                    | minikube | disabled     |
+| logviewer                   | minikube | disabled     |
+| metallb                     | minikube | disabled     |
+| metrics-server              | minikube | disabled     |
+| nvidia-driver-installer     | minikube | disabled     |
+| nvidia-gpu-device-plugin    | minikube | disabled     |
+| olm                         | minikube | disabled     |
+| pod-security-policy         | minikube | disabled     |
+| registry                    | minikube | disabled     |
+| registry-aliases            | minikube | disabled     |
+| registry-creds              | minikube | disabled     |
+| storage-provisioner         | minikube | enabled ✅   |
+| storage-provisioner-gluster | minikube | disabled     |
+| volumesnapshots             | minikube | disabled     |
+|-----------------------------|----------|--------------|
 ```
 
-Ensure that the `heapster` and `metrics-server` addons are enabled by executing the following commands.
+Ensure that the `metrics-server` addon is enabled by executing the following command.
 ```bash
-$ minikube addons enable heapster
-heapster was successfully enabled
-
 $ minikube addons enable metrics-server
-metrics-server was successfully enabled
+    ▪ Using image k8s.gcr.io/metrics-server/metrics-server:v0.4.2
+🌟  The 'metrics-server' addon is enabled
 ```
 
 Check that all components are running:
 
 ```bash
 $ kubectl get pods --namespace=kube-system
-NAME                                    READY     STATUS    RESTARTS   AGE
-etcd-minikube                           1/1       Running   0          42m
-heapster-5wx5l                          1/1       Running   0          43m
-influxdb-grafana-hlgtg                  2/2       Running   0          43m
-kube-addon-manager-minikube             1/1       Running   0          43m
-kube-apiserver-minikube                 1/1       Running   0          42m
-kube-controller-manager-minikube        1/1       Running   0          42m
-kube-dns-86f4d74b45-5vd6w               3/3       Running   0          43m
-kube-proxy-f87hq                        1/1       Running   0          43m
-kube-scheduler-minikube                 1/1       Running   0          42m
-kubernetes-dashboard-5498ccf677-jc5sb   1/1       Running   0          43m
-metrics-server-85c979995f-rmn2d         1/1       Running   0          43m
-storage-provisioner                     1/1       Running   0          43m
+NAME                               READY   STATUS    RESTARTS   AGE
+coredns-74ff55c5b-m2npc            1/1     Running   0          3m
+etcd-minikube                      1/1     Running   0          3m15s
+kube-apiserver-minikube            1/1     Running   0          3m15s
+kube-controller-manager-minikube   1/1     Running   0          3m15s
+kube-proxy-fvhlb                   1/1     Running   0          3m
+kube-scheduler-minikube            1/1     Running   0          3m14s
+metrics-server-7894db45f8-qxnt4    1/1     Running   0          51s
+storage-provisioner                1/1     Running   1          3m14s
 ```
 
 ### Open `minikube` Dashboard
@@ -94,92 +94,110 @@ This is the main `minikube` dashboard.
 $ minikube dashboard
 ```
 
-### Open `heapster` Dashboard
-This is a separate operational monitoring dashboard, provided by the 
-
-```bash
-$ minikube addons open heapster
-```
-
 ### View the `kubernetes` Nodes
 ```bash
 $ kubectl get nodes
-NAME       STATUS    ROLES     AGE       VERSION
-minikube   Ready     master    1d        v1.10.0
-
-$ kubectl describe nodes minikube
+NAME       STATUS   ROLES                  AGE     VERSION
+minikube   Ready    control-plane,master   8m29s   v1.20.2
+```
+```bash
+$ kubectl get nodes
+NAME       STATUS   ROLES                  AGE     VERSION
+minikube   Ready    control-plane,master   8m29s   v1.20.2
+k8s-sandpit $ kubectl describe nodes minikube
 Name:               minikube
-Roles:              master
+Roles:              control-plane,master
 Labels:             beta.kubernetes.io/arch=amd64
                     beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
                     kubernetes.io/hostname=minikube
+                    kubernetes.io/os=linux
+                    minikube.k8s.io/commit=15cede53bdc5fe242228853e737333b09d4336b5
+                    minikube.k8s.io/name=minikube
+                    minikube.k8s.io/updated_at=2021_05_05T06_20_21_0700
+                    minikube.k8s.io/version=v1.19.0
+                    node-role.kubernetes.io/control-plane=
                     node-role.kubernetes.io/master=
-Annotations:        node.alpha.kubernetes.io/ttl=0
-                    volumes.kubernetes.io/controller-managed-attach-detach=true
-CreationTimestamp:  Wed, 09 May 2018 07:51:16 +0100
+Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 05 May 2021 06:20:18 +0100
 Taints:             <none>
 Unschedulable:      false
+Lease:
+  HolderIdentity:  minikube
+  AcquireTime:     <unset>
+  RenewTime:       Wed, 05 May 2021 06:29:01 +0100
 Conditions:
   Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
   ----             ------  -----------------                 ------------------                ------                       -------
-  OutOfDisk        False   Fri, 11 May 2018 07:08:52 +0100   Wed, 09 May 2018 08:47:13 +0100   KubeletHasSufficientDisk     kubelet has sufficient disk space available
-  MemoryPressure   False   Fri, 11 May 2018 07:08:52 +0100   Wed, 09 May 2018 08:47:13 +0100   KubeletHasSufficientMemory   kubelet has sufficient memory available
-  DiskPressure     False   Fri, 11 May 2018 07:08:52 +0100   Wed, 09 May 2018 08:47:13 +0100   KubeletHasNoDiskPressure     kubelet has no disk pressure
-  PIDPressure      False   Fri, 11 May 2018 07:08:52 +0100   Wed, 09 May 2018 07:51:12 +0100   KubeletHasSufficientPID      kubelet has sufficient PID available
-  Ready            True    Fri, 11 May 2018 07:08:52 +0100   Thu, 10 May 2018 08:01:26 +0100   KubeletReady                 kubelet is posting ready status
+  MemoryPressure   False   Wed, 05 May 2021 06:27:53 +0100   Wed, 05 May 2021 06:20:14 +0100   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Wed, 05 May 2021 06:27:53 +0100   Wed, 05 May 2021 06:20:14 +0100   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Wed, 05 May 2021 06:27:53 +0100   Wed, 05 May 2021 06:20:14 +0100   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Wed, 05 May 2021 06:27:53 +0100   Wed, 05 May 2021 06:20:31 +0100   KubeletReady                 kubelet is posting ready status
 Addresses:
-  InternalIP:  192.168.64.25
+  InternalIP:  192.168.49.2
   Hostname:    minikube
 Capacity:
- cpu:                4
- ephemeral-storage:  16055720Ki
- hugepages-2Mi:      0
- memory:             8175052Ki
- pods:               110
+  cpu:                4
+  ephemeral-storage:  61255492Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             8401816Ki
+  pods:               110
 Allocatable:
- cpu:                4
- ephemeral-storage:  14796951528
- hugepages-2Mi:      0
- memory:             8072652Ki
- pods:               110
+  cpu:                4
+  ephemeral-storage:  61255492Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             8401816Ki
+  pods:               110
 System Info:
- Machine ID:                 83b8e8b9102b473db7f4077339d3d911
- System UUID:                349B11E8-0000-0000-942C-6A0000EC8DE0
- Boot ID:                    c574e16b-e2a5-43cb-9054-d42761e8fe47
- Kernel Version:             4.9.64
- OS Image:                   Buildroot 2017.11
- Operating System:           linux
- Architecture:               amd64
- Container Runtime Version:  docker://17.12.1-ce
- Kubelet Version:            v1.10.0
- Kube-Proxy Version:         v1.10.0
-ExternalID:                  minikube
-Non-terminated Pods:         (13 in total)
-  Namespace                  Name                                     CPU Requests  CPU Limits  Memory Requests  Memory Limits
-  ---------                  ----                                     ------------  ----------  ---------------  -------------
-  demo                       java-sample-api-774d564cdd-pv8bp         500m (12%)    0 (0%)      0 (0%)           0 (0%)
-  kube-system                etcd-minikube                            0 (0%)        0 (0%)      0 (0%)           0 (0%)
-  kube-system                heapster-5wx5l                           0 (0%)        0 (0%)      0 (0%)           0 (0%)
-  kube-system                influxdb-grafana-hlgtg                   0 (0%)        0 (0%)      0 (0%)           0 (0%)
-  kube-system                kube-addon-manager-minikube              5m (0%)       0 (0%)      50Mi (0%)        0 (0%)
-  kube-system                kube-apiserver-minikube                  250m (6%)     0 (0%)      0 (0%)           0 (0%)
-  kube-system                kube-controller-manager-minikube         200m (5%)     0 (0%)      0 (0%)           0 (0%)
-  kube-system                kube-dns-86f4d74b45-5vd6w                260m (6%)     0 (0%)      110Mi (1%)       170Mi (2%)
-  kube-system                kube-proxy-f87hq                         0 (0%)        0 (0%)      0 (0%)           0 (0%)
-  kube-system                kube-scheduler-minikube                  100m (2%)     0 (0%)      0 (0%)           0 (0%)
-  kube-system                kubernetes-dashboard-5498ccf677-jc5sb    0 (0%)        0 (0%)      0 (0%)           0 (0%)
-  kube-system                metrics-server-85c979995f-rmn2d          0 (0%)        0 (0%)      0 (0%)           0 (0%)
-  kube-system                storage-provisioner                      0 (0%)        0 (0%)      0 (0%)           0 (0%)
+  Machine ID:                 73c9fceff7724090ba72b64bf6e8eff8
+  System UUID:                5f3206b7-95ab-4cef-912c-d9f799288f63
+  Boot ID:                    82518345-c9f6-49c4-8c83-4eb3186e4cc1
+  Kernel Version:             4.19.121-linuxkit
+  OS Image:                   Ubuntu 20.04.1 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://20.10.5
+  Kubelet Version:            v1.20.2
+  Kube-Proxy Version:         v1.20.2
+PodCIDR:                      10.244.0.0/24
+PodCIDRs:                     10.244.0.0/24
+Non-terminated Pods:          (10 in total)
+  Namespace                   Name                                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                         ------------  ----------  ---------------  -------------  ---
+  kube-system                 coredns-74ff55c5b-m2npc                      100m (2%)     0 (0%)      70Mi (0%)        170Mi (2%)     8m35s
+  kube-system                 etcd-minikube                                100m (2%)     0 (0%)      100Mi (1%)       0 (0%)         8m50s
+  kube-system                 kube-apiserver-minikube                      250m (6%)     0 (0%)      0 (0%)           0 (0%)         8m50s
+  kube-system                 kube-controller-manager-minikube             200m (5%)     0 (0%)      0 (0%)           0 (0%)         8m50s
+  kube-system                 kube-proxy-fvhlb                             0 (0%)        0 (0%)      0 (0%)           0 (0%)         8m35s
+  kube-system                 kube-scheduler-minikube                      100m (2%)     0 (0%)      0 (0%)           0 (0%)         8m49s
+  kube-system                 metrics-server-7894db45f8-qxnt4              100m (2%)     0 (0%)      300Mi (3%)       0 (0%)         6m26s
+  kube-system                 storage-provisioner                          0 (0%)        0 (0%)      0 (0%)           0 (0%)         8m49s
+  kubernetes-dashboard        dashboard-metrics-scraper-f6647bd8c-h2rfl    0 (0%)        0 (0%)      0 (0%)           0 (0%)         5m13s
+  kubernetes-dashboard        kubernetes-dashboard-968bcb79-9lxq9          0 (0%)        0 (0%)      0 (0%)           0 (0%)         5m13s
 Allocated resources:
   (Total limits may be over 100 percent, i.e., overcommitted.)
-  CPU Requests  CPU Limits  Memory Requests  Memory Limits
-  ------------  ----------  ---------------  -------------
-  1315m (32%)   0 (0%)      160Mi (2%)       170Mi (2%)
+  Resource           Requests    Limits
+  --------           --------    ------
+  cpu                850m (21%)  0 (0%)
+  memory             470Mi (5%)  170Mi (2%)
+  ephemeral-storage  100Mi (0%)  0 (0%)
+  hugepages-1Gi      0 (0%)      0 (0%)
+  hugepages-2Mi      0 (0%)      0 (0%)
 Events:
-  Type    Reason        Age               From               Message
-  ----    ------        ----              ----               -------
-  Normal  NodeNotReady  23h               kubelet, minikube  Node minikube status is now: NodeNotReady
-  Normal  NodeReady     23h (x2 over 1d)  kubelet, minikube  Node minikube status is now: NodeReady
+  Type    Reason                   Age    From        Message
+  ----    ------                   ----   ----        -------
+  Normal  Starting                 8m50s  kubelet     Starting kubelet.
+  Normal  NodeHasSufficientMemory  8m50s  kubelet     Node minikube status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    8m50s  kubelet     Node minikube status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     8m50s  kubelet     Node minikube status is now: NodeHasSufficientPID
+  Normal  NodeNotReady             8m50s  kubelet     Node minikube status is now: NodeNotReady
+  Normal  NodeAllocatableEnforced  8m50s  kubelet     Updated Node Allocatable limit across pods
+  Normal  NodeReady                8m40s  kubelet     Node minikube status is now: NodeReady
+  Normal  Starting                 8m34s  kube-proxy  Starting kube-proxy.
 ```
 
 ### Tag and Untag the `kubernetes` Nodes
@@ -187,7 +205,7 @@ Tags can be added to nodes to ensure that containers are correctly targeted.
 
 ```bash
 $ kubectl label nodes minikube az=az1
-node "minikube" labeled
+node/minikube labeled
 ```
 
 Tags can also be removed from nodes.
@@ -231,4 +249,11 @@ Completely delete the `minikube` VM as follows:
 
 ```bash
 $ minikube delete
+```
+
+### Complete Cleanup
+To remove all trace of the `minikube` VM, use the following command:
+
+```bash
+$ minikube delete --all --purge
 ```

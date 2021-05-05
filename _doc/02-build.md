@@ -17,7 +17,7 @@ go clean
 ls -l simple-golang-api
 
 # build and verify the built file exists
-go build -i
+go build
 ls -l simple-golang-api
 
 # start the API
