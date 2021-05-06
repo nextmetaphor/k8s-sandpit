@@ -302,6 +302,10 @@ Events:           <none>
 #### Generate Load using `jmeter` 
 Open `jmeter` and run the provided `_jmeter/jmeter-test.jmx` script, changing the server address to the IP address of the `minikube` instance, which can be found by executing `minikube ip`. Observe the number of pods increase accordingly. Also observe the number of pods decrease when the test is stopped.
 
+```bash
+$ minikube service --url golang-sample-api --namespace demo
+```
+
 #### Cleanup
 Remove the horizontal autoscaling group, service, deployment and namespace.
 

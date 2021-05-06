@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-sample-api
+  namespace: demo
+  labels:
+    app: golang-sample-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-sample-api
+  template:
+    metadata:
+      labels:
+        app: golang-sample-api
+    spec:
+      containers:
+      - image: nextmetaphor/simple-golang-api
+        imagePullPolicy: IfNotPresent
+        name: golang-sample-api
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 500m
